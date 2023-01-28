@@ -1,0 +1,40 @@
+div#content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000000;
+    img.background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    div.profile {
+        position: absolute;
+        overflow: hidden;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    p.name {
+        position: absolute;
+        margin: 0;
+    }
+    p.name.limit {
+        display: -webkit-box;
+        /*-webkit-line-clamp: 2;*/
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    div.barcode {
+        position: absolute;
+        overflow: hidden;
+    }
+}
