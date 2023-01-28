@@ -24,13 +24,12 @@ export default React.memo(function App() {
   const elBarcode = createRef<HTMLDivElement>();
   
   useEffect(()=>{
-    console.log(scale);
-    if (structure == undefined) return console.log(structure);
+    if (structure == undefined) return;
     // Content
     elContent.current!.style.width = `${getForScale(scale, 1200)}px`;
     elContent.current!.style.height = `${getForScale(scale, 799)}px`;
     // Background
-    elBackground.current!.src = structure.background;
+    if (elBackground.current!.src !== structure.background) elBackground.current!.src = structure.background;
     elBackground.current!.style.width = `${getForScale(scale, 1200)}px`;
     elBackground.current!.style.height = `${getForScale(scale, 799)}px`;
     // Barcode
@@ -51,7 +50,7 @@ export default React.memo(function App() {
           elProfile.current!.style.borderWidth = `${getForScale(scale, structure.image.borderWidth)}px`;
           elProfile.current!.style.borderColor = structure.image.borderColor!;
         }
-        elProfileImage.current!.src = structure.data.image;
+        if (elProfileImage.current!.src !== structure.data.image) elProfileImage.current!.src = structure.data.image;
     }
     // Name
     elName.current!.innerText = structure.data.name;
@@ -76,7 +75,6 @@ export default React.memo(function App() {
 
   function drawNewContent(json: DataType) {
     setStructure(json);
-    console.log('ReDraw');
   }
 
   function onResize() {
@@ -86,10 +84,10 @@ export default React.memo(function App() {
 
   useEffect(()=>{
     window.drawNewContent = drawNewContent;
-    document.addEventListener('resize', onResize);
+    window.addEventListener('resize', onResize);
     return ()=>{
       console.log('UnMount');
-      document.removeEventListener('resize', onResize);
+      window.removeEventListener('resize', onResize);
     };
   }, []);
 
@@ -100,13 +98,6 @@ export default React.memo(function App() {
       </div>
       <p ref={elName} className={"name"}>Nombre del estudiante</p>
       <div ref={elBarcode} className={"barcode"}>
-        {/*(barcode)&&<Barcode
-          ref={refBarcode}
-          value={barcode}
-          scale={scale}
-          ready={readyBarcode}
-          style={{ position: 'absolute' }}
-        />*/}
         {(barcode)&&<BarcodeComponent
           value={barcode}
           width={getForScale(scale, structure!.barcode.width)}
