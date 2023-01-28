@@ -1,27 +1,40 @@
-import React, { createRef, useState } from 'react';
-import './App.scss';
+import React, { createRef, useEffect, useState } from 'react';
 import { DataType } from './DataType';
 import { getForScale } from './Utils';
-import Barcode from './Barcode';
+import BarcodeComponent from './BarcodeComponent';
+import './App.scss';
+
+declare global {
+  interface Window {
+    drawNewContent: (json: DataType)=>void;
+  }
+};
 
 export default React.memo(function App() {
   const [structure, setStructure] = useState<DataType | undefined>();
   const [width, setWidth] = useState(window.innerWidth);
-  const [height, setHeight] = useState(window.innerHeight);
   const [scale, setScale] = useState(width/1200);
   const [barcode, setBarcode] = useState<false | string>(false);
   // Ref's
+  const elContent = createRef<HTMLDivElement>();
   const elBackground = createRef<HTMLImageElement>();
   const elProfile = createRef<HTMLDivElement>();
   const elProfileImage = createRef<HTMLImageElement>();
   const elName = createRef<HTMLParagraphElement>();
   const elBarcode = createRef<HTMLDivElement>();
   
-  function reDraw() {
-    if (structure == undefined) return;
+  useEffect(()=>{
+    console.log(scale);
+    if (structure == undefined) return console.log(structure);
+    // Content
+    elContent.current!.style.width = `${getForScale(scale, 1200)}px`;
+    elContent.current!.style.height = `${getForScale(scale, 799)}px`;
     // Background
     elBackground.current!.src = structure.background;
+    elBackground.current!.style.width = `${getForScale(scale, 1200)}px`;
+    elBackground.current!.style.height = `${getForScale(scale, 799)}px`;
     // Barcode
+    setBarcode(structure.data.barcode);
     elBarcode.current!.style.top = `${getForScale(scale, structure.barcode.y)}px`;
     elBarcode.current!.style.left = `${getForScale(scale, structure.barcode.x)}px`;
     elBarcode.current!.style.width = `${getForScale(scale, structure.barcode.width)}px`;
@@ -59,23 +72,47 @@ export default React.memo(function App() {
       elName.current!.classList.add('limit');
       (elName.current!.style as any)['-webkit-line-clamp'] = String(structure.name.maxNumberLines);
     }
+  }, [structure, scale]);
+
+  function drawNewContent(json: DataType) {
+    setStructure(json);
+    console.log('ReDraw');
   }
 
-  return(<div id={'content'}>
-      <img className={"background"} alt={"Imagen del fondo"} />
-      <div className={"profile"}>
-        <img alt={"Imagen del perfil"} />
+  function onResize() {
+    setWidth(window.innerWidth);
+    setScale(window.innerWidth/1200);
+  }
+
+  useEffect(()=>{
+    window.drawNewContent = drawNewContent;
+    document.addEventListener('resize', onResize);
+    return ()=>{
+      console.log('UnMount');
+      document.removeEventListener('resize', onResize);
+    };
+  }, []);
+
+  return(<div ref={elContent} id={'content'}>
+      <img ref={elBackground} className={"background"} alt={"Imagen del fondo"} />
+      <div ref={elProfile} className={"profile"}>
+        <img ref={elProfileImage} alt={"Imagen del perfil"} />
       </div>
-      <p className={"name"}>Nombre del estudiante</p>
-      <div className={"barcode"}>
-        {(barcode)&&<Barcode
+      <p ref={elName} className={"name"}>Nombre del estudiante</p>
+      <div ref={elBarcode} className={"barcode"}>
+        {/*(barcode)&&<Barcode
+          ref={refBarcode}
           value={barcode}
           scale={scale}
-          style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%'
-          }}
+          ready={readyBarcode}
+          style={{ position: 'absolute' }}
+        />*/}
+        {(barcode)&&<BarcodeComponent
+          value={barcode}
+          width={getForScale(scale, structure!.barcode.width)}
+          maxWidth={getForScale(scale, structure!.barcode.width)}
+          height={getForScale(scale, structure!.barcode.height)}
+          style={{ width: '100%', height: '100%' }}
         />}
       </div>
   </div>);
