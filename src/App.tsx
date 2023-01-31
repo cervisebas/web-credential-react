@@ -39,9 +39,14 @@ export default React.memo(function App() {
     elContent.current!.style.width = `${getForScale(scale, 1200)}px`;
     elContent.current!.style.height = `${getForScale(scale, 779)}px`;
     // Background
-    if (elBackground.current!.src !== structure.background) elBackground.current!.src = structure.background;
+
+    elBackground.current!.style.opacity = '0';
     elBackground.current!.style.width = `${getForScale(scale, 1200)}px`;
     elBackground.current!.style.height = `${getForScale(scale, 779)}px`;
+    setTimeout(() => {
+      elBackground.current!.style.opacity = '1';
+      if (elBackground.current!.src !== structure.background) elBackground.current!.src = structure.background;
+    }, 110);
     // Barcode
     setBarcode(structure.data.barcode);
     elBarcode.current!.style.top = `${getForScale(scale, structure.barcode.y)}px`;
@@ -50,6 +55,7 @@ export default React.memo(function App() {
     elBarcode.current!.style.height = `${getForScale(scale, structure.barcode.height)}px`;
     // Image Profile
     if (structure.image == undefined) elProfile.current!.style.display = 'none'; else {
+        elProfileImage.current!.style.opacity = '0';
         elProfile.current!.style.display = 'block';
         elProfile.current!.style.top = `${getForScale(scale, structure.image.y)}px`;
         elProfile.current!.style.left = `${getForScale(scale, structure.image.x)}px`;
@@ -60,7 +66,10 @@ export default React.memo(function App() {
           elProfile.current!.style.borderWidth = `${getForScale(scale, structure.image.borderWidth)}px`;
           elProfile.current!.style.borderColor = structure.image.borderColor!;
         }
-        if (elProfileImage.current!.src !== structure.data.image) elProfileImage.current!.src = structure.data.image;
+        setTimeout(() => {
+          elProfileImage.current!.style.opacity = '1';
+          if (elProfileImage.current!.src !== structure.data.image) elProfileImage.current!.src = structure.data.image;
+        }, 110);
     }
     // Name
     elName.current!.innerText = structure.data.name;
