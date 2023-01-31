@@ -22,7 +22,7 @@ const ImgOptions = {
 
 export default React.memo(function App() {
   const [structure, setStructure] = useState<DataType | undefined>();
-  const [width, setWidth] = useState(window.innerWidth);
+  const [width, setWidth] = useState(document.body.clientWidth);
   const [scale, setScale] = useState(width/1200);
   const [barcode, setBarcode] = useState<false | string>(false);
   // Ref's
@@ -102,6 +102,9 @@ export default React.memo(function App() {
       return false;
     }
   }
+  function _disableContextMenu(event: MouseEvent) {
+    event.preventDefault();
+  }
 
   function test() {
     drawNewContent({
@@ -141,16 +144,18 @@ export default React.memo(function App() {
             maxNumberLines: 2
         }
     });
-}
+  }
 
   useEffect(()=>{
     window.drawNewContent = drawNewContent;
     window.getNodeImage = getNodeImage;
     (window as any).test = test;
     window.addEventListener('resize', onResize);
+    document.addEventListener('contextmenu', _disableContextMenu);
     return ()=>{
       console.log('UnMount');
       window.removeEventListener('resize', onResize);
+      document.addEventListener('contextmenu', _disableContextMenu);
     };
   }, []);
 
