@@ -17,6 +17,7 @@ div#content {
     div.profile {
         position: absolute;
         overflow: hidden;
+        border-style: solid;
         transition: width 200ms, height 200ms, top 200ms, left 200ms, border-radius 200ms, border-width 200ms, border-color 200ms;
         img {
             width: 100%;
@@ -29,6 +30,7 @@ div#content {
     p.name {
         position: absolute;
         margin: 0;
+        display: flex;
         transition: top 200ms, left 200ms, font-size 200ms, color 200ms, text-shadow 200ms;
     }
     p.name.limit {

@@ -4,7 +4,7 @@ export type DataType = {
         barcode: string;
         name: string;
     };
-    background: any;
+    background: string;
     barcode: {
         y: number;
         x: number;
@@ -30,7 +30,8 @@ export type DataType = {
         fontSize: number;
         fontFamily?: string;
         fontWeight?: "bold" | "normal" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900";
-        textAlign?: "auto" | "center" | "left" | "right" | "justify";
+        textAlign?: "center" | "left" | "right";
+        textVerticalAlign?: "center" | "flex-start" | "flex-end";
         textShadowColor?: string;
         textShadowOffset?: {
             width: number;

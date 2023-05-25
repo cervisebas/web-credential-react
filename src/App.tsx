@@ -1,6 +1,6 @@
-import React, { createRef, useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { DataType } from './DataType';
-import { getForScale } from './Utils';
+import { getForScale, isHexColor } from './Utils';
 import BarcodeComponent from './BarcodeComponent';
 import domtoimage, { Options as DomToImageOptions } from 'dom-to-image';
 import './App.scss';
@@ -26,12 +26,12 @@ export default React.memo(function App() {
   const [scale, setScale] = useState(width/1200);
   const [barcode, setBarcode] = useState<false | string>(false);
   // Ref's
-  const elContent = createRef<HTMLDivElement>();
-  const elBackground = createRef<HTMLImageElement>();
-  const elProfile = createRef<HTMLDivElement>();
-  const elProfileImage = createRef<HTMLImageElement>();
-  const elName = createRef<HTMLParagraphElement>();
-  const elBarcode = createRef<HTMLDivElement>();
+  const elContent = useRef<HTMLDivElement>(null);
+  const elBackground = useRef<HTMLImageElement>(null);
+  const elProfile = useRef<HTMLDivElement>(null);
+  const elProfileImage = useRef<HTMLImageElement>(null);
+  const elName = useRef<HTMLParagraphElement>(null);
+  const elBarcode = useRef<HTMLDivElement>(null);
   
   useEffect(()=>{
     if (structure == undefined) return;
@@ -39,14 +39,20 @@ export default React.memo(function App() {
     elContent.current!.style.width = `${getForScale(scale, 1200)}px`;
     elContent.current!.style.height = `${getForScale(scale, 779)}px`;
     // Background
-
-    elBackground.current!.style.opacity = '0';
-    elBackground.current!.style.width = `${getForScale(scale, 1200)}px`;
-    elBackground.current!.style.height = `${getForScale(scale, 779)}px`;
-    setTimeout(() => {
-      elBackground.current!.style.opacity = '1';
-      if (elBackground.current!.src !== structure.background) elBackground.current!.src = structure.background;
-    }, 110);
+    if (!isHexColor(structure.background)) {
+      elBackground.current!.style.display = 'flex';
+      elContent.current!.style.backgroundColor = '#000000';
+      elBackground.current!.style.opacity = '0';
+      elBackground.current!.style.width = `${getForScale(scale, 1200)}px`;
+      elBackground.current!.style.height = `${getForScale(scale, 779)}px`;
+      setTimeout(() => {
+        elBackground.current!.style.opacity = '1';
+        if (elBackground.current!.src !== structure.background) elBackground.current!.src = structure.background;
+      }, 110);
+    } else {
+      elContent.current!.style.backgroundColor = structure.background;
+      elBackground.current!.style.display = 'none';
+    }
     // Barcode
     setBarcode(structure.data.barcode);
     elBarcode.current!.style.top = `${getForScale(scale, structure.barcode.y)}px`;
@@ -56,7 +62,7 @@ export default React.memo(function App() {
     // Image Profile
     if (structure.image == undefined) elProfile.current!.style.display = 'none'; else {
         elProfileImage.current!.style.opacity = '0';
-        elProfile.current!.style.display = 'block';
+        elProfile.current!.style.display = 'flex';
         elProfile.current!.style.top = `${getForScale(scale, structure.image.y)}px`;
         elProfile.current!.style.left = `${getForScale(scale, structure.image.x)}px`;
         elProfile.current!.style.width = `${getForScale(scale, structure.image.width)}px`;
@@ -90,6 +96,7 @@ export default React.memo(function App() {
       elName.current!.classList.add('limit');
       (elName.current!.style as any)['-webkit-line-clamp'] = String(structure.name.maxNumberLines);
     }
+    if (structure.name.textVerticalAlign == undefined) elName.current!.style.alignItems = "flex-start"; else elName.current!.style.alignItems = "center";
   }, [structure, scale]);
 
   function drawNewContent(json: DataType) {
