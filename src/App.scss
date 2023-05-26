@@ -27,13 +27,13 @@ div#content {
             transition: opacity 100ms;
         }
     }
-    p.name {
+    div.name {
         position: absolute;
         margin: 0;
         display: flex;
         transition: top 200ms, left 200ms, font-size 200ms, color 200ms, text-shadow 200ms;
     }
-    p.name.limit {
+    div.name.limit {
         display: -webkit-box;
         /*-webkit-line-clamp: 2;*/
         -webkit-box-orient: vertical;

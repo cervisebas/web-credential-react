@@ -139,7 +139,7 @@ export default React.memo(function App() {
       <div ref={elProfile} className={"profile"}>
         <img ref={elProfileImage} alt={"Imagen del perfil"} />
       </div>
-      <p ref={elName} className={"name"}>Nombre del estudiante</p>
+      <div ref={elName} className={"name"}>Nombre del estudiante</div>
       <div ref={elBarcode} className={"barcode"}>
         {(barcode)&&<BarcodeComponent
           value={barcode}
