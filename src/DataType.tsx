@@ -8,7 +8,8 @@ export type DataType = {
     barcode: {
         y: number;
         x: number;
-        color: string;
+        color?: string;
+        background?: string;
         width: number;
         height: number;
     };

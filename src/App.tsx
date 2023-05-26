@@ -146,6 +146,8 @@ export default React.memo(function App() {
           width={getForScale(scale, structure!.barcode.width)}
           maxWidth={getForScale(scale, structure!.barcode.width)}
           height={getForScale(scale, structure!.barcode.height)}
+          lineColor={structure!.barcode?.color??'#000000'}
+          background={structure!.barcode?.background??'#FFFFFF'}
           style={{ width: '100%', height: '100%' }}
         />}
       </div>
