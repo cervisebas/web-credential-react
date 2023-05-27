@@ -8,7 +8,10 @@ import './App.scss';
 declare global {
   interface Window {
     drawNewContent: (json: DataType)=>void;
-    getNodeImage: ()=>Promise<string | false>;
+    getNodeImage: ()=>Promise<void>;
+    ReactNativeWebView?: {
+      postMessage: (message: string)=>void;
+    };
   }
 };
 
@@ -108,14 +111,24 @@ export default React.memo(function App() {
     setWidth(width);
     setScale(width/1200);
   }
-  async function getNodeImage() {
+
+  function globalShowLoad(isLoad: boolean) {
+    window.ReactNativeWebView?.postMessage(JSON.stringify({ isLoad }));
+  }
+  function globalShowError() {
+    window.ReactNativeWebView?.postMessage(JSON.stringify({ error: true }));
+  }
+  function globalSendData(data: string) {
+    window.ReactNativeWebView?.postMessage(data);
+  }
+
+  async function getNodeImage(): Promise<void> {
+    globalShowLoad(true);
     try {
       const result = await domtoimage.toPng(document.getElementById('content') as HTMLElement, ImgOptions);
-      console.log(result);
-      return result;
-    } catch (error) {
-      console.log(error);
-      return false;
+      globalSendData(result);
+    } catch {
+      globalShowError();
     }
   }
   function _disableContextMenu(event: MouseEvent) {
