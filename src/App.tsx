@@ -115,8 +115,8 @@ export default React.memo(function App() {
   function globalShowLoad(isLoad: boolean) {
     window.ReactNativeWebView?.postMessage(JSON.stringify({ isLoad }));
   }
-  function globalShowError() {
-    window.ReactNativeWebView?.postMessage(JSON.stringify({ error: true }));
+  function globalShowError(message: string) {
+    window.ReactNativeWebView?.postMessage(JSON.stringify({ error: true, message }));
   }
   function globalSendData(data: string) {
     window.ReactNativeWebView?.postMessage(data);
@@ -127,8 +127,8 @@ export default React.memo(function App() {
     try {
       const result = await domtoimage.toPng(document.getElementById('content') as HTMLElement, ImgOptions);
       globalSendData(result);
-    } catch {
-      globalShowError();
+    } catch (error) {
+      globalShowError(error as string);
     }
   }
   function _disableContextMenu(event: MouseEvent) {
