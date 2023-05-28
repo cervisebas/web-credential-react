@@ -128,10 +128,8 @@ export default React.memo(function App() {
     globalShowLoad(true);
     try {
       const result = await domtoimage.toPng(document.getElementById('content') as HTMLElement, ImgOptions);
-      console.log(result);
       globalSendData(result);
     } catch (error) {
-      console.log(error);
       globalShowError(error as string);
     }
   }
@@ -145,7 +143,6 @@ export default React.memo(function App() {
     window.addEventListener('resize', onResize);
     document.addEventListener('contextmenu', _disableContextMenu);
     return ()=>{
-      console.log('UnMount');
       window.removeEventListener('resize', onResize);
       document.addEventListener('contextmenu', _disableContextMenu);
     };
