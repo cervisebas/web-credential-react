@@ -128,6 +128,7 @@ export default React.memo(function App() {
       const result = await domtoimage.toPng(document.getElementById('content') as HTMLElement, ImgOptions);
       globalSendData(result);
     } catch (error) {
+      console.log(error);
       globalShowError(error as string);
     }
   }
