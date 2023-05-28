@@ -127,7 +127,6 @@ export default React.memo(function App() {
     try {
       const width = getForScale(scale, 1200);
       const height = getForScale(scale, 779);
-      console.log(scale, width, height);
       const result = await domtoimage.toPng(
         document.getElementById('content') as HTMLElement,
         { ...ImgOptions, width, height }
@@ -139,7 +138,7 @@ export default React.memo(function App() {
       globalShowError(error as string);
     }
   }, [scale]);
-  
+
   window.drawNewContent = drawNewContent;
   window.getNodeImage = getNodeImage;
 
