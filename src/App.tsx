@@ -28,6 +28,7 @@ export default React.memo(function App() {
   const [width, setWidth] = useState(document.body.clientWidth);
   const [scale, setScale] = useState(width/1200);
   const [barcode, setBarcode] = useState<false | string>(false);
+  const [showBackground, setShowBackground] = useState<boolean>(true);
   // Ref's
   const elContent = useRef<HTMLDivElement>(null);
   const elBackground = useRef<HTMLImageElement>(null);
@@ -54,6 +55,7 @@ export default React.memo(function App() {
       }, 110);
     } else {
       elContent.current!.style.backgroundColor = structure.background;
+      elBackground.current!.src = 'data:image/webp;base64,UklGRiYAAABXRUJQVlA4IBoAAAAwAQCdASoBAAEAAMASJaQAA3AA/v7uqgAAAA==';
       elBackground.current!.style.display = 'none';
     }
     // Barcode
@@ -126,6 +128,7 @@ export default React.memo(function App() {
     globalShowLoad(true);
     try {
       const result = await domtoimage.toPng(document.getElementById('content') as HTMLElement, ImgOptions);
+      console.log(result);
       globalSendData(result);
     } catch (error) {
       console.log(error);
