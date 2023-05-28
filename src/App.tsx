@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { DataType } from './DataType';
 import { getForScale, isHexColor } from './Utils';
 import BarcodeComponent from './BarcodeComponent';
@@ -8,7 +8,7 @@ import './App.scss';
 declare global {
   interface Window {
     drawNewContent: (json: DataType)=>void;
-    getNodeImage: ()=>Promise<void>;
+    getNodeImage: ()=>void;
     ReactNativeWebView?: {
       postMessage: (message: string)=>void;
     };
@@ -17,7 +17,7 @@ declare global {
 
 const ImgOptions: DomToImageOptions = {
   quality: 1,
-  cacheBust: true,
+  cacheBust: false,
   bgcolor: '#000000'
 };
 
@@ -122,12 +122,15 @@ export default React.memo(function App() {
     window.ReactNativeWebView?.postMessage(data);
   }
 
-  async function getNodeImage(): Promise<void> {
+  const getNodeImage = useCallback(async()=>{
     globalShowLoad(true);
     try {
+      const width = getForScale(scale, 1200);
+      const height = getForScale(scale, 779);
+      console.log(scale, width, height);
       const result = await domtoimage.toPng(
         document.getElementById('content') as HTMLElement,
-        { ...ImgOptions, width: getForScale(scale, 1200), height: getForScale(scale, 779) }
+        { ...ImgOptions, width, height }
       );
       globalShowLoad(false);
       globalSendData(result);
@@ -135,14 +138,16 @@ export default React.memo(function App() {
       globalShowLoad(false);
       globalShowError(error as string);
     }
-  }
+  }, [scale]);
+  
+  window.drawNewContent = drawNewContent;
+  window.getNodeImage = getNodeImage;
+
   function _disableContextMenu(event: MouseEvent) {
     event.preventDefault();
   }
 
   useEffect(()=>{
-    window.drawNewContent = drawNewContent;
-    window.getNodeImage = getNodeImage;
     window.addEventListener('resize', onResize);
     document.addEventListener('contextmenu', _disableContextMenu);
     return ()=>{
