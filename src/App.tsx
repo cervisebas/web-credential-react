@@ -16,9 +16,7 @@ declare global {
 };
 
 const ImgOptions: DomToImageOptions = {
-  width: 1200,
-  height: 779,
-  quality: 0.9,
+  quality: 1,
   cacheBust: true,
   bgcolor: '#000000'
 };
@@ -28,9 +26,9 @@ export default React.memo(function App() {
   const [width, setWidth] = useState(document.body.clientWidth);
   const [scale, setScale] = useState(width/1200);
   const [barcode, setBarcode] = useState<false | string>(false);
-  const [showBackground, setShowBackground] = useState<boolean>(true);
   // Ref's
   const elContent = useRef<HTMLDivElement>(null);
+  const elBackgroundColor = useRef<HTMLDivElement>(null);
   const elBackground = useRef<HTMLImageElement>(null);
   const elProfile = useRef<HTMLDivElement>(null);
   const elProfileImage = useRef<HTMLImageElement>(null);
@@ -44,8 +42,8 @@ export default React.memo(function App() {
     elContent.current!.style.height = `${getForScale(scale, 779)}px`;
     // Background
     if (!isHexColor(structure.background)) {
-      elBackground.current!.style.display = 'flex';
-      elContent.current!.style.backgroundColor = '#000000';
+      elBackground.current!.style.display = 'block';
+      elBackgroundColor.current!.style.backgroundColor = '#000000';
       elBackground.current!.style.opacity = '0';
       elBackground.current!.style.width = `${getForScale(scale, 1200)}px`;
       elBackground.current!.style.height = `${getForScale(scale, 779)}px`;
@@ -54,7 +52,7 @@ export default React.memo(function App() {
         if (elBackground.current!.src !== structure.background) elBackground.current!.src = structure.background;
       }, 110);
     } else {
-      elContent.current!.style.backgroundColor = structure.background;
+      elBackgroundColor.current!.style.backgroundColor = structure.background;
       elBackground.current!.src = 'data:image/webp;base64,UklGRiYAAABXRUJQVlA4IBoAAAAwAQCdASoBAAEAAMASJaQAA3AA/v7uqgAAAA==';
       elBackground.current!.style.display = 'none';
     }
@@ -127,9 +125,14 @@ export default React.memo(function App() {
   async function getNodeImage(): Promise<void> {
     globalShowLoad(true);
     try {
-      const result = await domtoimage.toPng(document.getElementById('content') as HTMLElement, ImgOptions);
+      const result = await domtoimage.toPng(
+        document.getElementById('content') as HTMLElement,
+        { ...ImgOptions, width: getForScale(scale, 1200), height: getForScale(scale, 779) }
+      );
+      globalShowLoad(false);
       globalSendData(result);
     } catch (error) {
+      globalShowLoad(false);
       globalShowError(error as string);
     }
   }
@@ -149,6 +152,7 @@ export default React.memo(function App() {
   }, []);
 
   return(<div ref={elContent} id={'content'}>
+      <div ref={elBackgroundColor} className={"background-color"} />
       <img ref={elBackground} className={"background"} alt={"Imagen del fondo"} />
       <div ref={elProfile} className={"profile"}>
         <img ref={elProfileImage} alt={"Imagen del perfil"} />

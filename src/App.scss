@@ -6,6 +6,15 @@ div#content {
     height: 100vh;
     background-color: #000000;
     overflow: hidden;
+    div.background-color {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vw;
+        background-color: #000000;
+        z-index: 0;
+    }
     img.background {
         position: absolute;
         top: 0;
@@ -13,6 +22,7 @@ div#content {
         object-fit: cover;
         opacity: 1;
         transition: opacity 100ms, width 200ms, height 200ms, top 200ms, left 200ms;
+        z-index: 1;
     }
     div.profile {
         position: absolute;
