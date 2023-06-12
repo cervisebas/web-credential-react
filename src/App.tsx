@@ -90,14 +90,14 @@ export default React.memo(function App() {
     elName.current!.style.fontSize = `${getForScale(scale, structure.name.fontSize)}px`;
     if (structure.name.fontFamily == undefined) elName.current!.style.fontFamily = 'Roboto'; else elName.current!.style.fontFamily = structure.name.fontFamily;
     if (structure.name.fontWeight == undefined) elName.current!.style.fontWeight = 'normal'; else elName.current!.style.fontWeight = structure.name.fontWeight;
-    if (structure.name.textAlign == undefined) elName.current!.style.textAlign = 'auto'; else elName.current!.style.textAlign = structure.name.textAlign;
+    if (structure.name.textAlign == undefined) elName.current!.style.justifyContent = 'flex-start'; else elName.current!.style.justifyContent = structure.name.textAlign;
     if (structure.name.textShadowOffset == undefined) (elName.current!.style as any).textShadowOffset = ''; else elName.current!.style.textShadow = `${getForScale(scale, structure.name.textShadowOffset.width)}px ${getForScale(scale, structure.name.textShadowOffset.height)}px ${getForScale(scale, structure.name.textShadowRadius!)}px ${structure.name.textShadowColor}`;
     if (structure.name.maxNumberLines == undefined) {
       elName.current!.classList.remove('limit');
       (elName.current!.style as any)['-webkit-line-clamp'] = 'unset';
     } else {
       elName.current!.classList.add('limit');
-      (elName.current!.style as any)['-webkit-line-clamp'] = String(structure.name.maxNumberLines);
+      elName.current!.style.webkitLineClamp = String(structure.name.maxNumberLines);
     }
     if (structure.name.textVerticalAlign == undefined) elName.current!.style.alignItems = "flex-start"; else elName.current!.style.alignItems = "center";
   }, [structure, scale]);
@@ -169,7 +169,7 @@ export default React.memo(function App() {
           maxWidth={getForScale(scale, structure!.barcode.width)}
           height={getForScale(scale, structure!.barcode.height)}
           lineColor={structure!.barcode?.color??'#000000'}
-          background={structure!.barcode?.background??'#FFFFFF'}
+          background={structure!.barcode?.background??'#00000000'}
           style={{ width: '100%', height: '100%' }}
         />}
       </div>

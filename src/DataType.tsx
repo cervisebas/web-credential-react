@@ -31,7 +31,7 @@ export type DataType = {
         fontSize: number;
         fontFamily?: string;
         fontWeight?: "bold" | "normal" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900";
-        textAlign?: "center" | "left" | "right";
+        textAlign?: "center" | "flex-start" | "flex-end";
         textVerticalAlign?: "center" | "flex-start" | "flex-end";
         textShadowColor?: string;
         textShadowOffset?: {
