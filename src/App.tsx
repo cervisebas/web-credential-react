@@ -63,40 +63,38 @@ export default React.memo(function App() {
     elBarcode.current!.style.width = `${getForScale(scale, structure.barcode.width)}px`;
     elBarcode.current!.style.height = `${getForScale(scale, structure.barcode.height)}px`;
     // Image Profile
-    if (structure.image == undefined) {
-      elProfile.current!.style.display = 'none';
-      elProfileImage.current!.src = 'data:image/webp;base64,UklGRiYAAABXRUJQVlA4IBoAAAAwAQCdASoBAAEAAMASJaQAA3AA/v7uqgAAAA==';
-    } else {
+    if (structure.image !== undefined) {
       elProfileImage.current!.style.opacity = '0';
       elProfile.current!.style.display = 'flex';
       elProfile.current!.style.top = `${getForScale(scale, structure.image.y)}px`;
       elProfile.current!.style.left = `${getForScale(scale, structure.image.x)}px`;
       elProfile.current!.style.width = `${getForScale(scale, structure.image.width)}px`;
       elProfile.current!.style.height = `${getForScale(scale, structure.image.height)}px`;
-      if (structure.image.borderRadius == undefined) elProfile.current!.style.borderRadius = '0px'; else elProfile.current!.style.borderRadius = `${getForScale(scale, structure.image.borderRadius)}px`;
-      if (structure.image.borderWidth == undefined) elProfile.current!.style.borderWidth = '0px'; else {
-        elProfile.current!.style.borderWidth = `${getForScale(scale, structure.image.borderWidth)}px`;
-        elProfile.current!.style.borderColor = structure.image.borderColor!;
-      }
+      elProfile.current!.style.borderRadius = `${getForScale(scale, structure.image.borderRadius??0)}px`;
+      elProfile.current!.style.borderWidth = `${getForScale(scale, structure.image.borderWidth??0)}px`;
+      elProfile.current!.style.borderColor = structure.image.borderColor??'#000000';
       setTimeout(() => {
         elProfileImage.current!.style.opacity = '1';
         if (elProfileImage.current!.src !== structure.data.image) elProfileImage.current!.src = structure.data.image;
       }, 110);
+    } else {
+      elProfile.current!.style.display = 'none';
+      elProfileImage.current!.src = 'data:image/webp;base64,UklGRiYAAABXRUJQVlA4IBoAAAAwAQCdASoBAAEAAMASJaQAA3AA/v7uqgAAAA==';
     }
     // Name
     elName.current!.innerText = structure.data.name;
     elName.current!.style.top = `${getForScale(scale, structure.name.y)}px`;
     elName.current!.style.left = `${getForScale(scale, structure.name.x)}px`;
     elName.current!.style.width = `${getForScale(scale, structure.name.width)}px`;
-    if (structure.name.height == undefined) elName.current!.style.height = 'auto'; else elName.current!.style.height = `${getForScale(scale, structure.name.height!)}px`;
+    elName.current!.style.height = (structure.name.height !== undefined)? `${getForScale(scale, structure.name.height!)}px`: 'auto';
     elName.current!.style.color = structure.name.color;
     elName.current!.style.fontSize = `${getForScale(scale, structure.name.fontSize)}px`;
-    if (structure.name.fontFamily == undefined) elName.current!.style.fontFamily = 'Roboto'; else elName.current!.style.fontFamily = structure.name.fontFamily;
-    if (structure.name.fontWeight == undefined) elName.current!.style.fontWeight = 'normal'; else elName.current!.style.fontWeight = structure.name.fontWeight;
-    if (structure.name.textAlign == undefined) elName.current!.style.justifyContent = 'flex-start'; else elName.current!.style.justifyContent = structure.name.textAlign;
-    if (structure.name.textShadowOffset == undefined) (elName.current!.style as any).textShadowOffset = ''; else elName.current!.style.textShadow = `${getForScale(scale, structure.name.textShadowOffset.width)}px ${getForScale(scale, structure.name.textShadowOffset.height)}px ${getForScale(scale, structure.name.textShadowRadius!)}px ${structure.name.textShadowColor}`;
-    if (structure.name.textVerticalAlign == undefined) elName.current!.style.alignItems = "flex-start"; else elName.current!.style.alignItems = structure.name.textVerticalAlign;
-    if (structure.name.maxNumberLines == undefined) elName.current!.style.webkitLineClamp = 'unset'; else elName.current!.style.webkitLineClamp = String(structure.name.maxNumberLines);
+    elName.current!.style.fontFamily = structure.name.fontFamily??'Roboto';
+    elName.current!.style.fontWeight = structure.name.fontWeight??'600';
+    elName.current!.style.justifyContent = structure.name.textAlign??'flex-start';
+    elName.current!.style.alignItems = structure.name.textVerticalAlign??'center';
+    elName.current!.style.textShadow = `${getForScale(scale, structure.name.textShadowOffset?.width??0)}px ${getForScale(scale, structure.name.textShadowOffset?.height??0)}px ${getForScale(scale, structure.name.textShadowRadius??0)}px ${structure.name.textShadowColor??'#000000'}`;
+    elName.current!.style.webkitLineClamp = String (structure.name.maxNumberLines??'unset');
   }, [structure, scale]);
 
   function drawNewContent(json: DataType) {
