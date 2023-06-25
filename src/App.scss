@@ -22,7 +22,7 @@ div#content {
         object-fit: cover;
         opacity: 1;
         transition: opacity 100ms, width 200ms, height 200ms, top 200ms, left 200ms;
-        z-index: 1;
+        z-index: 0;
     }
     div.profile {
         position: absolute;
