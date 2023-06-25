@@ -96,13 +96,7 @@ export default React.memo(function App() {
     if (structure.name.textAlign == undefined) elName.current!.style.justifyContent = 'flex-start'; else elName.current!.style.justifyContent = structure.name.textAlign;
     if (structure.name.textShadowOffset == undefined) (elName.current!.style as any).textShadowOffset = ''; else elName.current!.style.textShadow = `${getForScale(scale, structure.name.textShadowOffset.width)}px ${getForScale(scale, structure.name.textShadowOffset.height)}px ${getForScale(scale, structure.name.textShadowRadius!)}px ${structure.name.textShadowColor}`;
     if (structure.name.textVerticalAlign == undefined) elName.current!.style.alignItems = "flex-start"; else elName.current!.style.alignItems = structure.name.textVerticalAlign;
-    if (structure.name.maxNumberLines == undefined) {
-      elName.current!.classList.remove('limit');
-      (elName.current!.style as any)['-webkit-line-clamp'] = 'unset';
-    } else {
-      elName.current!.classList.add('limit');
-      elName.current!.style.webkitLineClamp = String(structure.name.maxNumberLines);
-    }
+    if (structure.name.maxNumberLines == undefined) elName.current!.style.webkitLineClamp = 'unset'; else elName.current!.style.webkitLineClamp = String(structure.name.maxNumberLines);
   }, [structure, scale]);
 
   function drawNewContent(json: DataType) {
