@@ -63,22 +63,25 @@ export default React.memo(function App() {
     elBarcode.current!.style.width = `${getForScale(scale, structure.barcode.width)}px`;
     elBarcode.current!.style.height = `${getForScale(scale, structure.barcode.height)}px`;
     // Image Profile
-    if (structure.image == undefined) elProfile.current!.style.display = 'none'; else {
-        elProfileImage.current!.style.opacity = '0';
-        elProfile.current!.style.display = 'flex';
-        elProfile.current!.style.top = `${getForScale(scale, structure.image.y)}px`;
-        elProfile.current!.style.left = `${getForScale(scale, structure.image.x)}px`;
-        elProfile.current!.style.width = `${getForScale(scale, structure.image.width)}px`;
-        elProfile.current!.style.height = `${getForScale(scale, structure.image.height)}px`;
-        if (structure.image.borderRadius == undefined) elProfile.current!.style.borderRadius = '0px'; else elProfile.current!.style.borderRadius = `${getForScale(scale, structure.image.borderRadius)}px`;
-        if (structure.image.borderWidth == undefined) elProfile.current!.style.borderWidth = '0px'; else {
-          elProfile.current!.style.borderWidth = `${getForScale(scale, structure.image.borderWidth)}px`;
-          elProfile.current!.style.borderColor = structure.image.borderColor!;
-        }
-        setTimeout(() => {
-          elProfileImage.current!.style.opacity = '1';
-          if (elProfileImage.current!.src !== structure.data.image) elProfileImage.current!.src = structure.data.image;
-        }, 110);
+    if (structure.image == undefined) {
+      elProfile.current!.style.display = 'none';
+      elProfileImage.current!.src = 'data:image/webp;base64,UklGRiYAAABXRUJQVlA4IBoAAAAwAQCdASoBAAEAAMASJaQAA3AA/v7uqgAAAA==';
+    } else {
+      elProfileImage.current!.style.opacity = '0';
+      elProfile.current!.style.display = 'flex';
+      elProfile.current!.style.top = `${getForScale(scale, structure.image.y)}px`;
+      elProfile.current!.style.left = `${getForScale(scale, structure.image.x)}px`;
+      elProfile.current!.style.width = `${getForScale(scale, structure.image.width)}px`;
+      elProfile.current!.style.height = `${getForScale(scale, structure.image.height)}px`;
+      if (structure.image.borderRadius == undefined) elProfile.current!.style.borderRadius = '0px'; else elProfile.current!.style.borderRadius = `${getForScale(scale, structure.image.borderRadius)}px`;
+      if (structure.image.borderWidth == undefined) elProfile.current!.style.borderWidth = '0px'; else {
+        elProfile.current!.style.borderWidth = `${getForScale(scale, structure.image.borderWidth)}px`;
+        elProfile.current!.style.borderColor = structure.image.borderColor!;
+      }
+      setTimeout(() => {
+        elProfileImage.current!.style.opacity = '1';
+        if (elProfileImage.current!.src !== structure.data.image) elProfileImage.current!.src = structure.data.image;
+      }, 110);
     }
     // Name
     elName.current!.innerText = structure.data.name;
@@ -134,6 +137,7 @@ export default React.memo(function App() {
       globalShowLoad(false);
       globalSendData(result);
     } catch (error) {
+      console.log(error);
       globalShowLoad(false);
       globalShowError(error as string);
     }
