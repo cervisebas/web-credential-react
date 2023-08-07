@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import barcodes from 'jsbarcode/src/barcodes';
 
@@ -77,7 +77,7 @@ const Barcode = ({
     return encoder.encode();
   };
 
-  const { bars, barCodeWidth } = useMemo(() => {
+  const { bars, barCodeWidth } = React.useMemo(() => {
     try {
       const encoder = barcodes[format];
       if (!encoder) {
